@@ -86,7 +86,7 @@ export function Hero() {
     <section
       id="hero-section"
       ref={sectionRef}
-      className="relative flex h-screen w-full flex-col items-center justify-center gap-10 px-4 text-center sm:gap-12"
+      className="relative flex h-screen w-full flex-col items-center justify-center gap-10 px-4 text-center sm:gap-12 overflow-visible"
     >
       {/* Background image with parallax effect - ONLY in hero section */}
       <div
@@ -110,10 +110,17 @@ export function Hero() {
         initial={pref === "reduce" ? false : { opacity: 0, y: 40, scale: 0.98 }}
         animate={pref === "reduce" ? undefined : { opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10 flex flex-col items-center gap-4 sm:gap-6 md:gap-8 px-4"
+        className="relative z-10 flex flex-col items-center gap-4 sm:gap-6 md:gap-8 px-4 overflow-visible"
       >
-        <div className="space-y-1 sm:space-y-2">
-          <h1 className="font-display text-[clamp(2.5rem, 8vw, 4rem)] sm:text-display-4 tracking-[-0.01em] drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]">
+        <div className="space-y-1 sm:space-y-2 overflow-visible">
+          <h1
+            className="font-display tracking-[-0.01em] drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)] sm:text-display-4"
+            style={{
+              fontSize: "clamp(4.5rem, 12vw, 5rem)",
+              lineHeight: "1.1",
+              overflow: "visible",
+            }}
+          >
             <span className="hero-heading-line block text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.9),0_0_40px_rgba(0,0,0,0.5)]">
               <span className="hero-word-flash">Dare</span> to{" "}
               <span className="hero-word-flash">become</span>

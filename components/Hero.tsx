@@ -260,7 +260,7 @@ export function Hero() {
                     key={i}
                     className="inline-block text-white"
                     style={{
-                      textShadow: "0 3px 18px rgba(0,0,0,0.9), 0 1px 8px rgba(0,0,0,0.7), 0 0 40px rgba(0,0,0,0.5)",
+                      textShadow: "0 2px 8px rgba(0,0,0,0.6)",
                       fontWeight: 700,
                     }}
                     variants={getMotionVariants(wordReveal, reduceMotion)}
@@ -290,7 +290,7 @@ export function Hero() {
                     style={{
                       letterSpacing: "-0.01em",
                       fontWeight: 700,
-                      textShadow: "0 3px 16px rgba(255,75,92,0.6), 0 1px 8px rgba(255,75,92,0.4), 0 0 30px rgba(255,75,92,0.3)",
+                      textShadow: "0 2px 6px rgba(255,75,92,0.4)",
                     }}
                     variants={getMotionVariants(wordReveal, reduceMotion)}
                     custom={i + 3}
@@ -310,7 +310,7 @@ export function Hero() {
           style={{
             fontSize: "clamp(1rem, 1.5vw + 0.5rem, 1.25rem)",
             lineHeight: 1.75,
-            textShadow: "0 2px 12px rgba(0,0,0,0.95), 0 1px 6px rgba(0,0,0,0.8), 0 0 30px rgba(0,0,0,0.6)",
+            textShadow: "0 1px 4px rgba(0,0,0,0.5)",
           }}
           initial={{ opacity: 0, y: 40, filter: "blur(12px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -351,7 +351,7 @@ export function Hero() {
                 "rounded-full bg-accent px-6 py-3.5 text-label font-sans font-semibold uppercase tracking-[0.1em] text-background shadow-[0_8px_32px_rgba(255,75,92,0.5),0_4px_16px_rgba(255,75,92,0.3)] transition-all duration-300 hover:bg-accent-soft hover:shadow-[0_12px_40px_rgba(255,75,92,0.6),0_6px_20px_rgba(255,75,92,0.4)] focus-visible:ring-accent-soft/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background touch-manipulation min-h-[44px]",
                 "h-auto backdrop-blur-sm"
               )}
-              aria-label="Contact Alcovia"
+            aria-label="Contact Alcovia"
           >
             Contact Us
               <Mail className="ml-2 h-4 w-4" />
@@ -373,7 +373,7 @@ export function Hero() {
                 "h-auto hover:bg-white/5 backdrop-blur-sm border border-white/10 hover:border-white/20 transition-all duration-300 rounded-full"
               )}
               style={{
-                textShadow: "0 2px 8px rgba(0,0,0,0.8)",
+                textShadow: "0 1px 3px rgba(0,0,0,0.5)",
               }}
               aria-label="Learn more about Alcovia"
           >

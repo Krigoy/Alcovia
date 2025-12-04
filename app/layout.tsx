@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   description:
     "Alcovia is a premium, high-energy learning environment engineered for ambitious minds.",
   metadataBase: new URL("https://alcovia.life"),
+  icons: {
+    icon: "/favicon.ico",
+  },
   openGraph: {
     title: "Alcovia — High-Performance Learning",
     description:

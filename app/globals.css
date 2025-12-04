@@ -22,6 +22,42 @@ body {
     "SF Pro Text", sans-serif;
   /* Improve touch scrolling on iOS */
   -webkit-overflow-scrolling: touch;
+  /* Mobile tap highlight color */
+  -webkit-tap-highlight-color: #ff4b5c;
+  tap-highlight-color: #ff4b5c;
+}
+
+/* Text selection highlight - match website theme */
+::selection {
+  background-color: #ff4b5c !important;
+  color: #ffffff !important;
+}
+
+::-moz-selection {
+  background-color: #ff4b5c !important;
+  color: #ffffff !important;
+}
+
+/* Apply to all elements */
+*::selection {
+  background-color: #ff4b5c !important;
+  color: #ffffff !important;
+}
+
+*::-moz-selection {
+  background-color: #ff4b5c !important;
+  color: #ffffff !important;
+}
+
+body::selection,
+p::selection,
+h1::selection,
+h2::selection,
+h3::selection,
+span::selection,
+div::selection {
+  background-color: #ff4b5c !important;
+  color: #ffffff !important;
 }
 
 * {
@@ -82,6 +118,31 @@ body {
     display: inline-block;
     word-break: break-word;
     overflow-wrap: break-word;
+  }
+
+  /* Text selection on mobile - ensure it works */
+  ::selection {
+    background-color: #ff4b5c !important;
+    color: #ffffff !important;
+    -webkit-tap-highlight-color: #ff4b5c !important;
+  }
+
+  *::selection {
+    background-color: #ff4b5c !important;
+    color: #ffffff !important;
+  }
+}
+
+/* WebKit mobile browsers (iOS Safari, Chrome mobile) */
+@supports (-webkit-touch-callout: none) {
+  ::selection {
+    background-color: #ff4b5c !important;
+    color: #ffffff !important;
+  }
+
+  *::selection {
+    background-color: #ff4b5c !important;
+    color: #ffffff !important;
   }
 }
 

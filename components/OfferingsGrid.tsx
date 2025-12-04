@@ -108,7 +108,7 @@ export function OfferingsGrid() {
               y: 0,
               scale: 1,
               rotationY: 0,
-              ease: [0.16, 1, 0.3, 1],
+              ease: "power3.out",
             }
           ),
         });

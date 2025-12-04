@@ -156,7 +156,7 @@ export function Hero() {
           ref={bgRef}
           className="absolute inset-0 w-full h-full"
           style={{
-            backgroundImage: "url(/final2.jpg)",
+            backgroundImage: "url(/masti.png)",
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",

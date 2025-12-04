@@ -6,10 +6,14 @@ import { useUser, useClerk } from "@clerk/nextjs";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import dynamic from "next/dynamic";
 
-export function SignOutButton() {
+// Component that uses Clerk hooks
+// ClerkProvider is in the layout, so hooks should work
+function SignOutButtonInner() {
   const { user, isLoaded } = useUser();
   const { signOut } = useClerk();
+  
   const [showButton, setShowButton] = useState(false);
   const [hasScrolledPastHero, setHasScrolledPastHero] = useState(false);
   const [hasAppearedOnce, setHasAppearedOnce] = useState(false);
@@ -27,7 +31,6 @@ export function SignOutButton() {
     };
     findHero();
     
-    // Try again after a short delay in case hero hasn't rendered yet
     const timeout = setTimeout(findHero, 500);
     return () => clearTimeout(timeout);
   }, []);
@@ -41,44 +44,39 @@ export function SignOutButton() {
 
     const handleScroll = () => {
       if (!heroRef.current) {
-        // Fallback: check if scrolled more than viewport height
         const scrolled = window.scrollY > window.innerHeight * 0.8;
         setHasScrolledPastHero(scrolled);
         return;
       }
 
       const heroRect = heroRef.current.getBoundingClientRect();
-      // Check if hero section is completely above the viewport
       const scrolledPast = heroRect.bottom < 0;
       setHasScrolledPastHero(scrolledPast);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Check initial position
+    handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isLoaded, user]);
 
-  // Show button after scrolling past hero - but keep it visible once shown
+  // Show button after scrolling past hero
   useEffect(() => {
     if (hasScrolledPastHero && isLoaded && user) {
-      // Small delay before showing
       const timer = setTimeout(() => {
         setShowButton(true);
         setHasAppearedOnce(true);
       }, 300);
       return () => clearTimeout(timer);
     } else if (!hasAppearedOnce && !hasScrolledPastHero) {
-      // Only hide if it hasn't appeared yet and user scrolls back
       setShowButton(false);
     }
-    // If hasAppearedOnce is true, keep button visible even when scrolling back
   }, [hasScrolledPastHero, isLoaded, user, hasAppearedOnce]);
 
   const handleSignOut = async () => {
     try {
       await signOut();
-      setHasAppearedOnce(false); // Reset on sign out
+      setHasAppearedOnce(false);
     } catch (error) {
       console.error("Error signing out:", error);
     }
@@ -99,7 +97,7 @@ export function SignOutButton() {
             scale: [0.2, 1.2, 0.9, 1.08, 0.97, 1.03, 1],
             transition: {
               duration: 2,
-              ease: [0.25, 1.75, 0.5, 1], // More pronounced bounce
+              ease: [0.25, 1.75, 0.5, 1],
               times: [0, 0.2, 0.4, 0.6, 0.75, 0.9, 1],
             }
           }}
@@ -130,3 +128,34 @@ export function SignOutButton() {
     </AnimatePresence>
   );
 }
+
+// Wrapper that only renders when Clerk is configured
+function SignOutButtonWrapper() {
+  const [mounted, setMounted] = useState(false);
+  const [shouldRender, setShouldRender] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    
+    // Check if Clerk is configured
+    const hasClerkKey = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+    
+    if (hasClerkKey) {
+      // Small delay to ensure ClerkProvider is ready
+      setTimeout(() => {
+        setShouldRender(true);
+      }, 200);
+    }
+  }, []);
+
+  if (!mounted || !shouldRender) {
+    return null;
+  }
+
+  return <SignOutButtonInner />;
+}
+
+// Export with dynamic to prevent SSR issues
+export const SignOutButton = dynamic(() => Promise.resolve(SignOutButtonWrapper), {
+  ssr: false,
+});

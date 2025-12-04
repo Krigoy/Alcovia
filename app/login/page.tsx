@@ -12,9 +12,12 @@ const ClerkSignIn = dynamic(() => import("@clerk/nextjs").then((mod) => ({ defau
 
 function LoginPageContent() {
   const [mounted, setMounted] = useState(false);
+  const [clerkKey, setClerkKey] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     setMounted(true);
+    // Check if Clerk key is available
+    setClerkKey(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
   }, []);
 
   // Return a placeholder during SSR to prevent hydration mismatch

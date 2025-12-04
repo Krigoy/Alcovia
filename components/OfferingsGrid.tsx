@@ -1,8 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useMotionPref } from "../hooks/useMotionPref";
+
+gsap.registerPlugin(ScrollTrigger);
 
 type Offering = {
   id: string;
@@ -65,15 +69,58 @@ const OFFERINGS: Offering[] = [
     id: "build-empathy",
     title: "Build Empathy",
     summary: "Cultivate emotional intelligence and understanding.",
-    image: "/Offerings/mentorship.webp"
+    image: "/Offerings/empathy.webp"
   }
 ];
 
 export function OfferingsGrid() {
+  const sectionRef = useRef<HTMLElement | null>(null);
   const pref = useMotionPref();
+
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const cards = sectionRef.current?.querySelectorAll(".offering-card");
+      if (!cards || cards.length === 0) return;
+
+      if (pref === "reduce") {
+        // Show cards immediately for reduced motion
+        gsap.set(cards, { opacity: 1, y: 0, scale: 1 });
+        return;
+      }
+
+      // Set initial state - more dramatic
+      gsap.set(cards, { opacity: 0, y: 60, scale: 0.9, rotationY: 15 });
+
+      // Animate cards with scroll-synced scrub (automatically reversible)
+      cards.forEach((card, index) => {
+        ScrollTrigger.create({
+          trigger: card as HTMLElement,
+          start: "top 90%",
+          end: "top 30%", // Longer scroll range for more noticeable animation
+          scrub: 0.6, // Faster scrub for more responsive feel
+          animation: gsap.fromTo(
+            card as HTMLElement,
+            { opacity: 0, y: 60, scale: 0.9, rotationY: 15 }, // Initial state - more dramatic
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              rotationY: 0,
+              ease: [0.16, 1, 0.3, 1],
+            }
+          ),
+        });
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [pref]);
 
   return (
     <section
+      ref={sectionRef}
       id="offerings"
       className="mx-auto flex max-w-7xl flex-col gap-12 px-4 py-20 sm:px-10 lg:px-16"
     >
@@ -86,44 +133,14 @@ export function OfferingsGrid() {
         </h2>
       </header>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" style={{ perspective: "1000px" }}>
         {OFFERINGS.map((offering, index) => (
-          <motion.article
+          <article
             key={offering.id}
-            initial={
-              pref === "reduce"
-                ? false
-                : { opacity: 0, y: 32, scale: 0.98 }
-            }
-            whileInView={
-              pref === "reduce"
-                ? undefined
-                : { opacity: 1, y: 0, scale: 1 }
-            }
-            whileHover={
-              pref === "reduce"
-                ? undefined
-                : {
-                    scale: 1.02,
-                    y: -4,
-                    boxShadow: "0 20px 80px rgba(0,0,0,0.9)"
-                  }
-            }
-            whileFocus={{
-              scale: 1.02,
-              y: -4,
-              boxShadow: "0 20px 80px rgba(0,0,0,0.9)"
-            }}
+            className="offering-card group relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-surface/70 shadow-[0_18px_60px_rgba(0,0,0,0.75)] backdrop-blur-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-soft/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-transform hover:scale-[1.02] hover:-translate-y-1 hover:shadow-[0_20px_80px_rgba(0,0,0,0.9)]"
             tabIndex={0}
             role="article"
             aria-label={`${offering.title}: ${offering.summary}`}
-            viewport={{ once: false, amount: 0.3 }}
-            transition={{
-              duration: 0.7,
-              delay: index * 0.07,
-              ease: [0.16, 1, 0.3, 1]
-            }}
-            className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-surface/70 shadow-[0_18px_60px_rgba(0,0,0,0.75)] backdrop-blur-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-soft/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             {/* Immersive overlay gradient */}
             <div className="absolute inset-0 z-10 bg-gradient-to-t from-background/90 via-background/40 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
@@ -150,7 +167,7 @@ export function OfferingsGrid() {
                 {offering.summary}
               </p>
             </div>
-          </motion.article>
+          </article>
         ))}
       </div>
     </section>

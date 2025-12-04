@@ -40,12 +40,12 @@ export function Manifesto() {
     }
 
     const ctx = gsap.context(() => {
-      // Set initial overlay visibility
+      // Set initial overlay visibility - balanced
       if (overlayRef.current) {
-        gsap.set(overlayRef.current, { opacity: isMobile ? 0.2 : 0.4 });
+        gsap.set(overlayRef.current, { opacity: isMobile ? 0.2 : 0.3 });
       }
 
-      // Animate signature overlay reveal on scroll - more visible (skip on mobile)
+      // Animate signature overlay reveal on scroll - balanced (skip on mobile)
       if (!isMobile) {
         ScrollTrigger.create({
           trigger: sectionRef.current,
@@ -53,9 +53,9 @@ export function Manifesto() {
           end: "center center",
           scrub: 0.8,
           animation: gsap.to(overlayRef.current, {
-            opacity: 0.8,
-            scale: 1.1,
-            rotation: 8,
+            opacity: 0.6,
+            scale: 1.08,
+            rotation: 6,
             ease: "power2.out",
           }),
         });
@@ -87,12 +87,12 @@ export function Manifesto() {
       ref={sectionRef}
       className="relative mx-auto flex min-h-screen w-full max-w-7xl flex-col items-center justify-center gap-4 sm:gap-10 px-4 py-12 sm:py-24 sm:px-10 lg:px-16"
     >
-      {/* Signature overlay with blend mode - more visible and prominent */}
+      {/* Signature overlay with blend mode - balanced visibility */}
       <div
         ref={overlayRef}
         className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center mix-blend-overlay"
         aria-hidden="true"
-        style={{ opacity: 0.4 }}
+        style={{ opacity: 0.3 }}
       >
         <svg
           width="600"
@@ -100,7 +100,7 @@ export function Manifesto() {
           viewBox="0 0 600 600"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="text-accent-soft/70 w-full h-full max-w-[300px] max-h-[300px] sm:max-w-[500px] sm:max-h-[500px] md:max-w-[600px] md:max-h-[600px] opacity-30 sm:opacity-100"
+          className="text-accent-soft/50 w-full h-full max-w-[300px] max-h-[300px] sm:max-w-[400px] sm:max-h-[400px] md:max-w-[500px] md:max-h-[500px] opacity-30 sm:opacity-60"
         >
           {/* More prominent signature pattern */}
           <path
@@ -156,31 +156,31 @@ export function Manifesto() {
           opacity: typeof window !== "undefined" && window.innerWidth < 768 ? 1 : undefined 
         }}
       >
-        <h2 className="manifesto-line font-display text-[clamp(2.75rem, 8vw, 4rem)] sm:text-[clamp(3.5rem, 8.5vw, 5rem)] md:text-[clamp(3.5rem, 7vw, 5rem)] lg:text-display-4 font-bold leading-[1.2] sm:leading-[1.05] md:leading-[0.95] tracking-[-0.005em] sm:tracking-[-0.01em] md:tracking-[-0.02em] text-white break-words overflow-wrap-anywhere">
-          <span className="block mb-0.5 sm:mb-0">
-            <span className="text-accent">UNPRECEDENTED</span>{" "}
-            <span className="text-white">LEARNINGS,</span>
-          </span>
-          <span className="block mb-0.5 sm:mb-0">
-            <span className="text-white">FAILING REGULARLY,</span>{" "}
-            <span className="text-white">BUILDING WITH</span>{" "}
-            <span className="text-accent">FRIENDS,</span>
-          </span>
-          <span className="block mb-0.5 sm:mb-0">
-            <span className="text-white">WHILE BEING ON A JOURNEY OF</span>{" "}
-            <span className="text-accent">SELF DISCOVERY.</span>
-          </span>
-          <span className="block mt-2 sm:mt-4 mb-0.5 sm:mb-0">
-            <span className="text-white">GET ON A</span>{" "}
-            <span className="text-accent">LEGACY BUILDING</span>{" "}
-            <span className="text-white">JOURNEY TODAY,</span>
+        <h2 className="manifesto-line font-display text-[clamp(2.5rem, 6vw, 3.5rem)] sm:text-[clamp(3rem, 7vw, 4.5rem)] md:text-display-3 font-semibold leading-[1.2] sm:leading-[1.15] md:leading-[1.1] tracking-tight text-foreground break-words overflow-wrap-anywhere [text-shadow:0_2px_8px_rgba(0,0,0,0.3)]">
+          <span className="block">
+            <span className="text-accent">Unprecedented</span>{" "}
+            <span className="text-foreground">learnings,</span>
           </span>
           <span className="block">
-            <span className="text-white">TO</span>{" "}
-            <span className="text-accent">BUILD</span>{" "}
-            <span className="text-white">THE</span>{" "}
-            <span className="text-accent">FUTURE</span>{" "}
-            <span className="text-white">OF TOMORROW.</span>
+            <span className="text-foreground">Failing regularly,</span>{" "}
+            <span className="text-foreground">building with</span>{" "}
+            <span className="text-accent">friends,</span>
+          </span>
+          <span className="block">
+            <span className="text-foreground">while being on a journey of</span>{" "}
+            <span className="text-accent">self discovery.</span>
+          </span>
+          <span className="block mt-2 sm:mt-3">
+            <span className="text-foreground">Get on a</span>{" "}
+            <span className="text-accent">legacy building</span>{" "}
+            <span className="text-foreground">journey today,</span>
+          </span>
+          <span className="block">
+            <span className="text-foreground">to</span>{" "}
+            <span className="text-accent">build</span>{" "}
+            <span className="text-foreground">the</span>{" "}
+            <span className="text-accent">future</span>{" "}
+            <span className="text-foreground">of tomorrow.</span>
           </span>
         </h2>
       </motion.div>

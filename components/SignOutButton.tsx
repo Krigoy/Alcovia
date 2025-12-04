@@ -17,6 +17,7 @@ function SignOutButtonInner() {
   const [showButton, setShowButton] = useState(false);
   const [hasScrolledPastHero, setHasScrolledPastHero] = useState(false);
   const [hasAppearedOnce, setHasAppearedOnce] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(false);
   const heroRef = useRef<HTMLElement | null>(null);
 
   // Find hero section
@@ -50,7 +51,8 @@ function SignOutButtonInner() {
       }
 
       const heroRect = heroRef.current.getBoundingClientRect();
-      const scrolledPast = heroRect.bottom < 0;
+      // Use a threshold to prevent flickering - consider past hero when bottom is above -50px
+      const scrolledPast = heroRect.bottom < -50;
       setHasScrolledPastHero(scrolledPast);
     };
 
@@ -60,17 +62,25 @@ function SignOutButtonInner() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isLoaded, user]);
 
-  // Show button after scrolling past hero
+  // Show button after scrolling past hero - keep it visible once shown
   useEffect(() => {
     if (hasScrolledPastHero && isLoaded && user) {
-      const timer = setTimeout(() => {
+      if (!hasAppearedOnce) {
+        // First time appearing - show with animation
+        const timer = setTimeout(() => {
+          setShowButton(true);
+          setHasAppearedOnce(true);
+        }, 300);
+        return () => clearTimeout(timer);
+      } else {
+        // Already appeared once - keep visible immediately
         setShowButton(true);
-        setHasAppearedOnce(true);
-      }, 300);
-      return () => clearTimeout(timer);
-    } else if (!hasAppearedOnce && !hasScrolledPastHero) {
+      }
+    } else if (!hasAppearedOnce) {
+      // Only hide if it hasn't appeared yet
       setShowButton(false);
     }
+    // If hasAppearedOnce is true, keep button visible even if scrolled back
   }, [hasScrolledPastHero, isLoaded, user, hasAppearedOnce]);
 
   const handleSignOut = async () => {
@@ -87,18 +97,23 @@ function SignOutButtonInner() {
   }
 
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {showButton && (
         <motion.div
-          initial={{ opacity: 0, y: 100, scale: 0.2 }}
+          key="signout-button"
+          initial={hasAnimated ? false : { opacity: 0, y: 100, scale: 0.2 }}
           animate={{ 
             opacity: 1, 
-            y: [100, -30, 12, -18, 6, -10, 0],
-            scale: [0.2, 1.2, 0.9, 1.08, 0.97, 1.03, 1],
-            transition: {
+            y: hasAnimated ? 0 : [100, -30, 12, -18, 6, -10, 0],
+            scale: hasAnimated ? 1 : [0.2, 1.2, 0.9, 1.08, 0.97, 1.03, 1],
+            transition: hasAnimated ? {
+              duration: 0.3,
+              ease: "easeOut"
+            } : {
               duration: 2,
               ease: [0.25, 1.75, 0.5, 1],
               times: [0, 0.2, 0.4, 0.6, 0.75, 0.9, 1],
+              onComplete: () => setHasAnimated(true),
             }
           }}
           exit={{ 

@@ -13,6 +13,21 @@ export function Hero() {
   const bgRef = useRef<HTMLDivElement | null>(null);
   const pref = useMotionPref();
 
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const handleContactUs = () => {
+    scrollToSection("cta-section");
+  };
+
+  const handleLearnMore = () => {
+    scrollToSection("manifesto-section");
+  };
+
   useEffect(() => {
     if (!sectionRef.current || !bgRef.current) return;
 
@@ -145,6 +160,7 @@ export function Hero() {
 
         <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 mt-8">
           <motion.button
+            onClick={handleContactUs}
             whileHover={
               pref === "reduce"
                 ? undefined
@@ -162,6 +178,7 @@ export function Hero() {
           </motion.button>
 
           <button
+            onClick={handleLearnMore}
             className="hero-cta text-xs font-medium uppercase tracking-[0.25em] text-foreground/60 underline-offset-4 hover:text-foreground hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background touch-manipulation min-h-[44px] px-2"
             aria-label="Learn more about Alcovia"
           >

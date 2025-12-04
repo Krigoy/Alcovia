@@ -83,6 +83,7 @@ export function Manifesto() {
 
   return (
     <section
+      id="manifesto-section"
       ref={sectionRef}
       className="relative mx-auto flex min-h-screen w-full max-w-7xl flex-col items-center justify-center gap-4 sm:gap-10 px-4 py-12 sm:py-24 sm:px-10 lg:px-16"
     >

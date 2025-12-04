@@ -20,7 +20,7 @@ export default function HomePage() {
         <OfferingsGrid />
         <SchoolToggle />
 
-        <section className="mx-auto flex w-full max-w-4xl flex-col items-center gap-6 px-4 pb-24 pt-12 text-center sm:px-10 lg:px-16">
+        <section id="cta-section" className="mx-auto flex w-full max-w-4xl flex-col items-center gap-6 px-4 pb-24 pt-12 text-center sm:px-10 lg:px-16">
           <p className="font-mono text-[0.7rem] uppercase tracking-[0.35em] text-accent-soft/90">
             Common Queries Answered
           </p>

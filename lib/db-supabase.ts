@@ -54,27 +54,3 @@ export async function getAllEnrollments(): Promise<Enrollment[]> {
   return (enrollments as Enrollment[]) || [];
 }
 
-// Get enrollment by ID
-export async function getEnrollmentById(
-  id: number
-): Promise<Enrollment | null> {
-  validateSupabaseConfig();
-  // Use admin client to bypass RLS for server-side operations
-  const supabaseAdmin = getSupabaseAdmin();
-  const { data: enrollment, error } = await supabaseAdmin
-    .from("enrollments")
-    .select("*")
-    .eq("id", id)
-    .single();
-
-  if (error) {
-    if (error.code === "PGRST116") {
-      // No rows returned
-      return null;
-    }
-    throw new Error(`Failed to retrieve enrollment: ${error.message}`);
-  }
-
-  return (enrollment as Enrollment) || null;
-}
-

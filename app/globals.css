@@ -25,6 +25,10 @@ body {
   /* Mobile tap highlight color */
   -webkit-tap-highlight-color: #ff4b5c;
   tap-highlight-color: #ff4b5c;
+  /* Performance optimizations for smooth 60fps animations */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* Text selection highlight - match website theme */
@@ -98,6 +102,34 @@ div::selection {
     overflow-x: hidden;
   }
 
+  /* Improved mobile typography spacing */
+  h1, h2, h3 {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Better mobile section spacing */
+  section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Optimize animations for mobile performance */
+  * {
+    will-change: auto;
+  }
+
+  /* Increased mobile padding for better breathing room */
+  section {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  /* Fluid typography with clamp for better mobile scaling */
+  h1, h2, h3 {
+    font-size: clamp(1.5rem, 5vw, 3rem);
+  }
+
   /* Optimize images for mobile */
   img {
     max-width: 100%;
@@ -130,6 +162,18 @@ div::selection {
   *::selection {
     background-color: #ff4b5c !important;
     color: #ffffff !important;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

@@ -1,12 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useMotionPref } from "../hooks/useMotionPref";
-
-gsap.registerPlugin(ScrollTrigger);
+import { lineReveal, getMotionVariants } from "../lib/animations";
 
 export function Manifesto() {
   const sectionRef = useRef<HTMLDivElement | null>(null);
@@ -14,72 +11,27 @@ export function Manifesto() {
   const pref = useMotionPref();
   const isInView = useInView(sectionRef, { once: false, amount: 0.3 });
 
-  useEffect(() => {
-    if (!sectionRef.current || !overlayRef.current) return;
-    
-    // Check if mobile
-    const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-    
-    // On mobile, ensure text is visible immediately
-    if (isMobile) {
-      const textElements = sectionRef.current.querySelectorAll(".manifesto-line");
-      textElements.forEach((el) => {
-        (el as HTMLElement).style.opacity = "1";
-        (el as HTMLElement).style.transform = "translateY(0)";
-      });
-    }
+  // Transform-based overlay animation using Framer Motion
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "center center"],
+  });
 
-    if (pref === "reduce") {
-      // Ensure text is visible even with reduced motion
-      const textElements = sectionRef.current.querySelectorAll(".manifesto-line");
-      textElements.forEach((el) => {
-        (el as HTMLElement).style.opacity = "1";
-        (el as HTMLElement).style.transform = "translateY(0)";
-      });
-      return;
-    }
-
-    const ctx = gsap.context(() => {
-      // Set initial overlay visibility - balanced
-      if (overlayRef.current) {
-        gsap.set(overlayRef.current, { opacity: isMobile ? 0.2 : 0.3 });
-      }
-
-      // Animate signature overlay reveal on scroll - balanced (skip on mobile)
-      if (!isMobile) {
-        ScrollTrigger.create({
-          trigger: sectionRef.current,
-          start: "top 75%",
-          end: "center center",
-          scrub: 0.8,
-          animation: gsap.to(overlayRef.current, {
-            opacity: 0.6,
-            scale: 1.08,
-            rotation: 6,
-            ease: "power2.out",
-          }),
-        });
-      }
-
-      // Stagger text reveal - automatically reversible with scrub
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 70%",
-          end: "bottom 40%",
-          scrub: isMobile ? 0.3 : 0.6, // Faster on mobile
-        },
-      });
-
-      tl.fromTo(
-        ".manifesto-line",
-        { opacity: isMobile ? 0.5 : 0, y: isMobile ? 16 : 32 },
-        { opacity: 1, y: 0, stagger: isMobile ? 0.05 : 0.08, duration: isMobile ? 0.5 : 0.7, ease: "power3.out" }
-      );
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, [pref]);
+  const overlayOpacity = useTransform(
+    scrollYProgress,
+    [0, 1],
+    pref === "reduce" ? [0.5, 0.5] : [0.5, 0.85]
+  );
+  const overlayScale = useTransform(
+    scrollYProgress,
+    [0, 1],
+    pref === "reduce" ? [1, 1] : [1, 1.15]
+  );
+  const overlayRotation = useTransform(
+    scrollYProgress,
+    [0, 1],
+    pref === "reduce" ? [0, 0] : [0, 10]
+  );
 
   return (
     <section
@@ -87,12 +39,16 @@ export function Manifesto() {
       ref={sectionRef}
       className="relative mx-auto flex min-h-screen w-full max-w-7xl flex-col items-center justify-center gap-4 sm:gap-10 px-4 py-12 sm:py-24 sm:px-10 lg:px-16"
     >
-      {/* Signature overlay with blend mode - balanced visibility */}
-      <div
+      {/* Signature overlay with blend mode - prominent brand element */}
+      <motion.div
         ref={overlayRef}
         className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center mix-blend-overlay"
         aria-hidden="true"
-        style={{ opacity: 0.3 }}
+        style={{
+          opacity: overlayOpacity,
+          scale: overlayScale,
+          rotate: overlayRotation,
+        }}
       >
         <svg
           width="600"
@@ -100,7 +56,7 @@ export function Manifesto() {
           viewBox="0 0 600 600"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="text-accent-soft/50 w-full h-full max-w-[300px] max-h-[300px] sm:max-w-[400px] sm:max-h-[400px] md:max-w-[500px] md:max-h-[500px] opacity-30 sm:opacity-60"
+          className="text-accent-soft/70 w-full h-full max-w-[350px] max-h-[350px] sm:max-w-[500px] sm:max-h-[500px] md:max-w-[650px] md:max-h-[650px] opacity-50 sm:opacity-80"
         >
           {/* More prominent signature pattern */}
           <path
@@ -142,46 +98,67 @@ export function Manifesto() {
             opacity="0.4"
           />
         </svg>
-      </div>
+      </motion.div>
 
       <motion.div
-        initial={pref === "reduce" ? false : { opacity: 0, y: 24 }}
-        animate={
-          isInView && pref !== "reduce" ? { opacity: 1, y: 0 } : pref !== "reduce" ? { opacity: 0, y: 24 } : undefined
-        }
-        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-20 w-full max-w-5xl text-center px-3 sm:px-4"
-        style={{ 
-          // Ensure text is visible on mobile immediately
-          opacity: typeof window !== "undefined" && window.innerWidth < 768 ? 1 : undefined 
+        className="relative z-20 w-full max-w-6xl px-3 sm:px-4"
+        variants={{
+          hidden: { opacity: 0 },
+          visible: {
+            opacity: 1,
+            transition: {
+              staggerChildren: 0.2,
+              delayChildren: 0.1,
+            },
+          },
         }}
+        initial="hidden"
+        animate={
+          isInView && pref !== "reduce"
+            ? "visible"
+            : pref === "reduce"
+            ? "visible"
+            : "hidden"
+        }
       >
-        <h2 className="manifesto-line font-display text-[clamp(2.5rem, 6vw, 3.5rem)] sm:text-[clamp(3rem, 7vw, 4.5rem)] md:text-display-3 font-semibold leading-[1.2] sm:leading-[1.15] md:leading-[1.1] tracking-tight text-foreground break-words overflow-wrap-anywhere [text-shadow:0_2px_8px_rgba(0,0,0,0.3)]">
-          <span className="block">
-            <span className="text-accent">Unprecedented</span>{" "}
-            <span className="text-foreground">learnings,</span>
-          </span>
-          <span className="block">
-            <span className="text-foreground">Failing regularly,</span>{" "}
-            <span className="text-foreground">building with</span>{" "}
-            <span className="text-accent">friends,</span>
-          </span>
-          <span className="block">
-            <span className="text-foreground">while being on a journey of</span>{" "}
-            <span className="text-accent">self discovery.</span>
-          </span>
-          <span className="block mt-2 sm:mt-3">
-            <span className="text-foreground">Get on a</span>{" "}
-            <span className="text-accent">legacy building</span>{" "}
-            <span className="text-foreground">journey today,</span>
-          </span>
-          <span className="block">
-            <span className="text-foreground">to</span>{" "}
-            <span className="text-accent">build</span>{" "}
-            <span className="text-foreground">the</span>{" "}
-            <span className="text-accent">future</span>{" "}
-            <span className="text-foreground">of tomorrow.</span>
-          </span>
+        <h2
+          className="font-display font-black text-foreground break-words overflow-wrap-anywhere [text-shadow:0_2px_8px_rgba(0,0,0,0.3)]"
+          style={{
+            fontSize: "clamp(3rem, 8vw, 5.5rem)",
+            lineHeight: "1.05",
+            letterSpacing: "-0.05em",
+            textAlign: "justify",
+            textJustify: "inter-word",
+            hyphens: "auto",
+          }}
+        >
+          {[
+            { text: "UNPRECEDENTED", accent: true },
+            { text: " LEARNINGS,", accent: false },
+            { text: " FAILING REGULARLY,", accent: false },
+            { text: " BUILDING WITH", accent: false },
+            { text: " FRIENDS,", accent: true },
+            { text: " WHILE BEING ON A JOURNEY OF", accent: false },
+            { text: " SELF DISCOVERY.", accent: true },
+            { text: " GET ON A", accent: false },
+            { text: " LEGACY BUILDING", accent: true },
+            { text: " JOURNEY TODAY,", accent: false },
+            { text: " TO", accent: false },
+            { text: " BUILD", accent: true },
+            { text: " THE", accent: false },
+            { text: " FUTURE", accent: true },
+            { text: " OF TOMORROW.", accent: false },
+          ].map((line, index) => (
+            <motion.span
+              key={index}
+              className="inline-block"
+              variants={getMotionVariants(lineReveal, pref === "reduce")}
+            >
+              <span className={line.accent ? "text-accent" : "text-foreground"}>
+                {line.text}
+              </span>
+            </motion.span>
+          ))}
         </h2>
       </motion.div>
     </section>

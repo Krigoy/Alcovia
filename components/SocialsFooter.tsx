@@ -2,9 +2,12 @@
 
 import { motion } from "framer-motion";
 import { useMotionPref } from "../hooks/useMotionPref";
+import { fannedCard, getMotionVariants, shouldReduceMotion } from "../lib/animations";
 
 export function SocialsFooter() {
   const pref = useMotionPref();
+  const reduceMotion = pref === "reduce" || shouldReduceMotion();
+  const fannedCardVariants = getMotionVariants(fannedCard, reduceMotion);
 
   return (
     <footer className="border-t border-surface-subtle/70 bg-background/80 px-4 py-16 sm:px-10 lg:px-16">
@@ -25,21 +28,11 @@ export function SocialsFooter() {
             href="https://www.linkedin.com/company/alcovia-life/"
             target="_blank"
             rel="noopener noreferrer"
-            className="relative flex h-48 w-36 sm:h-64 sm:w-48 md:h-80 md:w-60 items-center justify-center rounded-2xl border border-white/10 bg-surface-elevated shadow-2xl transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-soft/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background touch-manipulation overflow-hidden"
-            initial={{ rotate: -8, y: 0 }}
-            whileHover={
-              pref === "reduce"
-                ? undefined
-                : {
-                    scale: 1.1,
-                    y: -12,
-                    zIndex: 30,
-                    rotate: -4,
-                    boxShadow: "0 30px 100px rgba(0,0,0,0.95)"
-                  }
-            }
-            whileTap={pref === "reduce" ? undefined : { scale: 0.98 }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="relative flex h-48 w-36 sm:h-64 sm:w-48 md:h-80 md:w-60 items-center justify-center rounded-2xl border border-white/10 bg-surface-elevated shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-soft/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background touch-manipulation overflow-hidden"
+            initial={{ rotate: -8, y: 0, scale: 1, zIndex: 10 }}
+            variants={fannedCardVariants}
+            whileHover="hover"
+            whileTap={reduceMotion ? undefined : { scale: 0.98 }}
             aria-label="Visit Alcovia on LinkedIn"
             tabIndex={0}
           >
@@ -68,21 +61,11 @@ export function SocialsFooter() {
             href="https://www.instagram.com/alcovia.life/"
             target="_blank"
             rel="noopener noreferrer"
-            className="relative flex h-48 w-36 sm:h-64 sm:w-48 md:h-80 md:w-60 items-center justify-center rounded-2xl border border-white/10 bg-surface-elevated shadow-2xl transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-soft/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background touch-manipulation overflow-hidden"
-            initial={{ rotate: 8, y: 0 }}
-            whileHover={
-              pref === "reduce"
-                ? undefined
-                : {
-                    scale: 1.1,
-                    y: -12,
-                    zIndex: 30,
-                    rotate: 4,
-                    boxShadow: "0 30px 100px rgba(0,0,0,0.95)"
-                  }
-            }
-            whileTap={pref === "reduce" ? undefined : { scale: 0.98 }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="relative flex h-48 w-36 sm:h-64 sm:w-48 md:h-80 md:w-60 items-center justify-center rounded-2xl border border-white/10 bg-surface-elevated shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-soft/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background touch-manipulation overflow-hidden"
+            initial={{ rotate: 8, y: 0, scale: 1, zIndex: 20 }}
+            variants={fannedCardVariants}
+            whileHover="hover"
+            whileTap={reduceMotion ? undefined : { scale: 0.98 }}
             aria-label="Visit Alcovia on Instagram"
             tabIndex={0}
           >

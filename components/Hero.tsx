@@ -25,7 +25,7 @@ export function Hero() {
   };
 
   const handleLearnMore = () => {
-    scrollToSection("manifesto-section");
+    scrollToSection("offerings");
   };
 
   useEffect(() => {

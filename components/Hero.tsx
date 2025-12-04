@@ -44,51 +44,51 @@ export function Hero() {
     offset: ["start start", "end start"],
   });
 
-  // Optimized camera-tracked scroll animations (reduced complexity for better performance)
+  // Optimized camera-tracked scroll animations with enhanced parallax
   // Background layer - slowest movement (furthest from camera)
   const backgroundParallax = useTransform(
     scrollYProgress,
     [0, 1],
-    reduceMotion || isMobile ? [0, 0] : [0, 30]
+    reduceMotion || isMobile ? [0, 0] : [0, 80]
   );
   const backgroundRotation = useTransform(
     scrollYProgress,
     [0, 1],
-    reduceMotion || isMobile ? [0, 0] : [0, 1]
+    reduceMotion || isMobile ? [0, 0] : [0, 2]
   );
   
-  // Midground layer - medium movement (simplified)
+  // Midground layer - medium movement
   const midgroundParallax = useTransform(
     scrollYProgress,
     [0, 1],
-    reduceMotion || isMobile ? [0, 0] : [0, 60]
+    reduceMotion || isMobile ? [0, 0] : [0, 150]
   );
   const midgroundRotation = useTransform(
     scrollYProgress,
     [0, 1],
-    reduceMotion || isMobile ? [0, 0] : [0, -0.8]
+    reduceMotion || isMobile ? [0, 0] : [0, -1.5]
   );
   
-  // Foreground layer - fastest movement (reduced for performance)
+  // Foreground layer - fastest movement
   const foregroundParallax = useTransform(
     scrollYProgress,
     [0, 1],
-    reduceMotion || isMobile ? [0, 0] : [0, 90]
+    reduceMotion || isMobile ? [0, 0] : [0, 200]
   );
   
-  // Camera zoom (reduced scale for performance)
+  // Camera zoom for depth effect
   const parallaxScale = useTransform(
     scrollYProgress,
     [0, 1],
-    reduceMotion || isMobile ? [1, 1] : [1, 1.1]
+    reduceMotion || isMobile ? [1, 1] : [1, 1.15]
   );
-  const parallaxOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.7]);
+  const parallaxOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.6]);
   
-  // Text content parallax (simplified, no scale for performance)
+  // Text content parallax - moves opposite direction for depth
   const textParallax = useTransform(
     scrollYProgress,
     [0, 1],
-    reduceMotion || isMobile ? [0, 0] : [0, -20]
+    reduceMotion || isMobile ? [0, 0] : [0, -50]
   );
   const textScale = useTransform(
     scrollYProgress,

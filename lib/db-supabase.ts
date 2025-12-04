@@ -37,6 +37,48 @@ export async function insertEnrollment(data: {
   return enrollment as Enrollment;
 }
 
+// User type
+export type User = {
+  id: number;
+  clerk_id: string;
+  email: string;
+  first_name: string | null;
+  last_name: string | null;
+  created_at: string;
+};
+
+// Insert a new user (from Clerk authentication)
+export async function insertUser(data: {
+  clerkId: string;
+  email: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  createdAt: string;
+}): Promise<User> {
+  validateSupabaseConfig();
+  const supabaseAdmin = getSupabaseAdmin();
+  
+  const { data: user, error } = await supabaseAdmin
+    .from("users")
+    .insert([
+      {
+        clerk_id: data.clerkId.trim(),
+        email: data.email.trim().toLowerCase(),
+        first_name: data.firstName?.trim() || null,
+        last_name: data.lastName?.trim() || null,
+        created_at: data.createdAt,
+      },
+    ])
+    .select()
+    .single();
+
+  if (error) {
+    throw new Error(`Failed to insert user: ${error.message}`);
+  }
+
+  return user as User;
+}
+
 // Get all enrollments (for admin purposes)
 export async function getAllEnrollments(): Promise<Enrollment[]> {
   validateSupabaseConfig();

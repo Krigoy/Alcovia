@@ -5,6 +5,7 @@ import {
   Space_Grotesk as DisplayFont,
   Inter as SansFont,
 } from "next/font/google";
+import { ClerkProviderWrapper } from "../components/ClerkProviderWrapper";
 import { AppShell } from "../components/AppShell";
 
 const display = DisplayFont({
@@ -51,9 +52,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${display.variable} ${sans.variable}`}>
+    <html lang="en" className={`${display.variable} ${sans.variable} dark`}>
       <body className="bg-background text-foreground antialiased">
-        <AppShell>{children}</AppShell>
+        <ClerkProviderWrapper>
+          <AppShell>{children}</AppShell>
+        </ClerkProviderWrapper>
       </body>
     </html>
   );

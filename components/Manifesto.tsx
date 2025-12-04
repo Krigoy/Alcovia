@@ -301,19 +301,14 @@ export function Manifesto() {
                 
                 <span className="relative z-10 block text-justify" style={{ textJustify: "inter-word", hyphens: "auto" }}>
                   {line.split(" ").map((word, wordIndex) => {
-                    const isAccent = 
-                      word.includes("UNPRECEDENTED") ||
-                      word.includes("LEARNINGS") ||
-                      word.includes("FAILING") ||
-                      word.includes("REGULARLY") ||
-                      word.includes("BUILDING") ||
-                      word.includes("FRIENDS") ||
-                      word.includes("SELF") ||
-                      word.includes("DISCOVERY") ||
-                      word.includes("LEGACY") ||
-                      word.includes("BUILD") ||
-                      word.includes("FUTURE") ||
-                      word.includes("TOMORROW");
+                            const isAccent = 
+                              word.includes("LEARNINGS") ||
+                              word.includes("FAILING") ||
+                              word.includes("SELF") ||
+                              word.includes("DISCOVERY") ||
+                              word.includes("LEGACY") ||
+                              word.includes("FUTURE") ||
+                              word.includes("TOMORROW");
                     
                     return (
                       <span key={wordIndex} className="inline relative">

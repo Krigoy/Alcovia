@@ -231,9 +231,11 @@ export function Hero() {
               className="font-display text-white"
               style={{
                 fontSize: "clamp(2.75rem, 7.5vw + 1rem, 6rem)",
-                lineHeight: "1.15",
-                letterSpacing: "-0.03em",
-                fontWeight: 600,
+                lineHeight: "1.12",
+                letterSpacing: "-0.04em",
+                fontWeight: 800,
+                fontFeatureSettings: '"kern" 1, "liga" 1',
+                textRendering: "optimizeLegibility",
               }}
               variants={{
                 hidden: { opacity: 0 },
@@ -261,8 +263,9 @@ export function Hero() {
                     className="inline-block text-white"
                     style={{
                       textShadow: "0 2px 8px rgba(0,0,0,0.6)",
-                      fontWeight: 600,
-                      letterSpacing: "-0.03em",
+                      fontWeight: 800,
+                      letterSpacing: "-0.04em",
+                      fontFeatureSettings: '"kern" 1, "liga" 1',
                     }}
                     variants={getMotionVariants(wordReveal, reduceMotion)}
                     custom={i}
@@ -289,9 +292,10 @@ export function Hero() {
                     key={`line2-${i}`}
                     className="inline-block text-accent"
                     style={{
-                      letterSpacing: "-0.02em",
-                      fontWeight: 600,
+                      letterSpacing: "-0.03em",
+                      fontWeight: 800,
                       textShadow: "0 2px 6px rgba(255,75,92,0.4)",
+                      fontFeatureSettings: '"kern" 1, "liga" 1',
                     }}
                     variants={getMotionVariants(wordReveal, reduceMotion)}
                     custom={i + 3}

@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { useMotionPref } from "../hooks/useMotionPref";
+import { isTouchDevice } from "../lib/micro";
 import {
   heroEntrance,
   buttonHover,
@@ -16,7 +17,17 @@ export function Hero() {
   const parallaxRef = useRef<HTMLDivElement | null>(null);
   const pref = useMotionPref();
   const reduceMotion = pref === "reduce" || shouldReduceMotion();
-  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile on mount and handle resize
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(typeof window !== "undefined" && (window.innerWidth < 768 || isTouchDevice()));
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // Transform-based parallax using Framer Motion
   const { scrollYProgress } = useScroll({

@@ -96,15 +96,13 @@ export function Hero() {
     [1, 1] // Disabled for performance
   );
 
-  // Optimized spring physics for better performance (higher damping = faster settling, less computation)
+  // Optimized spring physics for better performance
   const smoothBackground = useSpring(backgroundParallax, { stiffness: 150, damping: 50, mass: 0.5 });
   const smoothMidground = useSpring(midgroundParallax, { stiffness: 150, damping: 50, mass: 0.5 });
   const smoothForeground = useSpring(foregroundParallax, { stiffness: 150, damping: 50, mass: 0.5 });
   const smoothScale = useSpring(parallaxScale, { stiffness: 150, damping: 50, mass: 0.5 });
-  // Use direct transforms for text (lighter than springs)
   const smoothTextParallax = textParallax;
   const smoothTextScale = textScale;
-  // Simplified rotations (direct transforms)
   const smoothBgRotation = backgroundRotation;
   const smoothMidRotation = midgroundRotation;
 
@@ -160,13 +158,29 @@ export function Hero() {
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
+            filter: "brightness(0.85) contrast(1.1)",
           }}
         />
       </motion.div>
       
+      {/* Sophisticated gradient overlay layer - animated fade in */}
+      <motion.div
+        className="pointer-events-none absolute inset-0 -z-9"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+      >
+        {/* Dark gradient from top to bottom */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/70 to-background/85" />
+        {/* Radial gradient from center for depth */}
+        <div className="absolute inset-0 bg-gradient-radial from-transparent via-background/40 to-background/90" />
+        {/* Subtle accent gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-transparent" />
+      </motion.div>
+      
       {/* Midground layer - medium parallax with rotation */}
       <motion.div
-        className="pointer-events-none absolute inset-0 -z-9 overflow-hidden"
+        className="pointer-events-none absolute inset-0 -z-8 overflow-hidden"
         style={{
           y: smoothMidground,
           rotateZ: smoothMidRotation,
@@ -175,108 +189,133 @@ export function Hero() {
           willChange: reduceMotion ? "auto" : "transform",
         }}
       >
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/30 to-background/80"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-        />
+        {/* Additional subtle overlay for depth */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/20 to-background/40" />
       </motion.div>
       
       {/* Foreground layer - fastest parallax (subtle overlay effects) */}
       <motion.div
-        className="pointer-events-none absolute inset-0 -z-8 overflow-hidden"
+        className="pointer-events-none absolute inset-0 -z-7 overflow-hidden"
         style={{
           y: smoothForeground,
           opacity: parallaxOpacity,
           willChange: reduceMotion ? "auto" : "transform",
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-accent-soft/5" />
+        <div className="absolute inset-0 bg-gradient-to-br from-accent/3 via-transparent to-accent-soft/3" />
       </motion.div>
 
-      {/* Content layer with camera-tracked parallax */}
+      {/* Content layer with camera-tracked parallax and frosted glass effect */}
       <motion.div
         variants={heroVariants}
         initial="hidden"
         animate="visible"
-        className="relative z-10 flex flex-col items-center gap-rhythm-3 sm:gap-rhythm-4 md:gap-rhythm-5 px-4"
+        className="relative z-10 flex flex-col items-center gap-rhythm-3 sm:gap-rhythm-4 md:gap-rhythm-5 px-4 w-full max-w-6xl"
         style={{
           y: smoothTextParallax,
           scale: smoothTextScale,
           transformStyle: "preserve-3d",
         }}
       >
+        {/* Frosted glass container for headline - premium feel */}
         <motion.div
-          className="space-y-1 sm:space-y-2"
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: { staggerChildren: 0.1, delayChildren: 0.2 },
-            },
-          }}
+          className="relative w-full"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
         >
-          <motion.h1
-            className="font-display font-black text-white tracking-[-0.02em] drop-shadow-[0_4px_20px_rgba(0,0,0,0.9)]"
-            style={{
-              fontSize: "clamp(3rem, 9vw + 1rem, 7rem)",
-              lineHeight: "1.1",
-              letterSpacing: "-0.02em",
-            }}
-            variants={{
-              hidden: { opacity: 0 },
-              visible: {
-                opacity: 1,
-                transition: { staggerChildren: 0.1, delayChildren: 0.3 },
-              },
-            }}
-          >
-            {["Dare", "to", "become"].map((word, i) => (
-              <motion.span
-                key={i}
-                className="inline-block text-white [text-shadow:0_2px_12px_rgba(0,0,0,0.9),0_0_40px_rgba(0,0,0,0.5)]"
-                variants={getMotionVariants(wordReveal, reduceMotion)}
-                custom={i}
+          <div className="absolute inset-0 -mx-8 -my-4 bg-background/20 backdrop-blur-[12px] rounded-3xl border border-white/5 sm:backdrop-blur-[16px] sm:rounded-[2rem]" />
+          <div className="relative px-8 py-4 sm:px-12 sm:py-6">
+            <motion.h1
+              className="font-display font-black text-white tracking-[-0.02em]"
+              style={{
+                fontSize: "clamp(2.5rem, 8vw + 1rem, 6.5rem)",
+                lineHeight: "1.08",
+                letterSpacing: "-0.02em",
+              }}
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: { staggerChildren: 0.08, delayChildren: 0.4 },
+                },
+              }}
+            >
+              {/* First line: "Dare to become" - impactful and bold */}
+              <motion.div
+                className="mb-2 sm:mb-3"
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] },
+                  },
+                }}
               >
-                {word}
-                {i < 2 && "\u00A0"}
-              </motion.span>
-            ))}
-            <br />
-            {["everything", "you", "were", "born", "to", "be."].map((word, i) => (
-              <motion.span
-                key={`line2-${i}`}
-                className="inline-block text-accent [text-shadow:0_2px_12px_rgba(255,75,92,0.6),0_0_30px_rgba(255,75,92,0.4)]"
-                style={{ letterSpacing: "-0.005em" }}
-                variants={getMotionVariants(wordReveal, reduceMotion)}
-                custom={i + 3}
+                {["Dare", "to", "become"].map((word, i) => (
+                  <motion.span
+                    key={i}
+                    className="inline-block text-white"
+                    style={{
+                      textShadow: "0 4px 24px rgba(0,0,0,0.95), 0 2px 12px rgba(0,0,0,0.8), 0 0 60px rgba(0,0,0,0.6)",
+                      filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.9))",
+                    }}
+                    variants={getMotionVariants(wordReveal, reduceMotion)}
+                    custom={i}
+                  >
+                    {word}
+                    {i < 2 && "\u00A0"}
+                  </motion.span>
+                ))}
+              </motion.div>
+              
+              {/* Second line: "everything you were born to be." - accent color */}
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: { duration: 0.9, delay: 0.3, ease: [0.16, 1, 0.3, 1] },
+                  },
+                }}
               >
-                {word}
-                {i < 5 && "\u00A0"}
-              </motion.span>
-            ))}
-          </motion.h1>
+                {["everything", "you", "were", "born", "to", "be."].map((word, i) => (
+                  <motion.span
+                    key={`line2-${i}`}
+                    className="inline-block text-accent"
+                    style={{
+                      letterSpacing: "-0.01em",
+                      textShadow: "0 4px 20px rgba(255,75,92,0.7), 0 2px 12px rgba(255,75,92,0.5), 0 0 40px rgba(255,75,92,0.4), 0 0 80px rgba(255,75,92,0.2)",
+                      filter: "drop-shadow(0 2px 8px rgba(255,75,92,0.6))",
+                    }}
+                    variants={getMotionVariants(wordReveal, reduceMotion)}
+                    custom={i + 3}
+                  >
+                    {word}
+                    {i < 5 && "\u00A0"}
+                  </motion.span>
+                ))}
+              </motion.div>
+            </motion.h1>
+          </div>
         </motion.div>
 
+        {/* Description text with enhanced styling */}
         <motion.p
-          className="max-w-2xl text-body font-sans text-white/90 mt-8 sm:mt-10 px-2 leading-relaxed [text-shadow:0_2px_8px_rgba(0,0,0,0.9),0_0_20px_rgba(0,0,0,0.6)]"
+          className="max-w-2xl text-body font-sans text-white/95 mt-6 sm:mt-8 px-4 sm:px-6 leading-relaxed relative z-10"
           style={{
             fontSize: "clamp(1rem, 1.5vw + 0.5rem, 1.25rem)",
-            lineHeight: 1.7,
+            lineHeight: 1.75,
+            textShadow: "0 2px 12px rgba(0,0,0,0.95), 0 1px 6px rgba(0,0,0,0.8), 0 0 30px rgba(0,0,0,0.6)",
           }}
-          variants={{
-            hidden: { opacity: 0, y: 50, filter: "blur(10px)" },
-            visible: {
-              opacity: 1,
-              y: 0,
-              filter: "blur(0px)",
-              transition: { 
-                duration: 1.1, 
-                delay: 0.8, 
-                ease: [0.25, 0.46, 0.45, 0.94] 
-              },
-            },
+          initial={{ opacity: 0, y: 40, filter: "blur(12px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ 
+            duration: 1.1, 
+            delay: 0.8, 
+            ease: [0.16, 1, 0.3, 1] 
           }}
         >
           Alcovia is a premier community for ambitious teenagers (ages 11–16) 
@@ -285,14 +324,16 @@ export function Hero() {
           empowers young minds to excel beyond traditional boundaries.
         </motion.p>
 
+        {/* CTA Buttons with enhanced styling */}
         <motion.div
-          className="flex flex-wrap items-center justify-center gap-rhythm-3 sm:gap-rhythm-4 mt-rhythm-6"
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: { staggerChildren: 0.12, delayChildren: 0.6 },
-            },
+          className="flex flex-wrap items-center justify-center gap-rhythm-3 sm:gap-rhythm-4 mt-rhythm-6 relative z-10"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ 
+            duration: 1, 
+            delay: 1, 
+            ease: [0.16, 1, 0.3, 1],
+            staggerChildren: 0.1,
           }}
         >
           <motion.div
@@ -305,12 +346,12 @@ export function Hero() {
             <Button
               onClick={handleContactUs}
               className={cn(
-                "rounded-full bg-accent px-6 py-3.5 text-label font-sans font-semibold uppercase tracking-[0.1em] text-background shadow-glow transition-colors hover:bg-accent-soft focus-visible:ring-accent-soft/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background touch-manipulation min-h-[44px]",
-                "h-auto"
+                "rounded-full bg-accent px-6 py-3.5 text-label font-sans font-semibold uppercase tracking-[0.1em] text-background shadow-[0_8px_32px_rgba(255,75,92,0.5),0_4px_16px_rgba(255,75,92,0.3)] transition-all duration-300 hover:bg-accent-soft hover:shadow-[0_12px_40px_rgba(255,75,92,0.6),0_6px_20px_rgba(255,75,92,0.4)] focus-visible:ring-accent-soft/80 focus-visible:ring-offset-2 focus-visible:ring-offset-background touch-manipulation min-h-[44px]",
+                "h-auto backdrop-blur-sm"
               )}
-            aria-label="Contact Alcovia"
-          >
-            Contact Us
+              aria-label="Contact Alcovia"
+            >
+              Contact Us
               <Mail className="ml-2 h-4 w-4" />
             </Button>
           </motion.div>
@@ -326,12 +367,15 @@ export function Hero() {
               onClick={handleLearnMore}
               variant="ghost"
               className={cn(
-                "text-label font-sans font-medium uppercase tracking-[0.1em] text-foreground/60 underline-offset-4 hover:text-foreground hover:underline focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background touch-manipulation min-h-[44px] px-2",
-                "h-auto hover:bg-transparent"
+                "text-label font-sans font-medium uppercase tracking-[0.1em] text-white/80 underline-offset-4 hover:text-white hover:underline focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background touch-manipulation min-h-[44px] px-4 py-3.5",
+                "h-auto hover:bg-white/5 backdrop-blur-sm border border-white/10 hover:border-white/20 transition-all duration-300 rounded-full"
               )}
-            aria-label="Learn more about Alcovia"
-          >
-            Learn more
+              style={{
+                textShadow: "0 2px 8px rgba(0,0,0,0.8)",
+              }}
+              aria-label="Learn more about Alcovia"
+            >
+              Learn more
             </Button>
           </motion.div>
         </motion.div>

@@ -124,6 +124,11 @@ html {
   scroll-behavior: auto;
 }
 
+/* Radial gradient utility for premium hero overlays */
+.bg-gradient-radial {
+  background-image: radial-gradient(circle at center, var(--tw-gradient-stops));
+}
+
 /* Mobile optimizations */
 @media (max-width: 768px) {
   /* Improve tap targets */

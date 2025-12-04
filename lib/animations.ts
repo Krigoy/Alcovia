@@ -181,14 +181,18 @@ export const getMotionVariants = <T extends Variants>(
   reduceMotion: boolean
 ): T => {
   if (reduceMotion) {
-    // Return minimal motion variants
-    return Object.keys(variants).reduce((acc, key) => {
-      acc[key] = {
-        ...variants[key],
-        transition: { duration: 0.01 },
-      };
-      return acc;
-    }, {} as T);
+    // Return variants with minimal motion - override transitions only
+    return {
+      ...variants,
+      hidden: variants.hidden ? { ...variants.hidden, transition: { duration: 0.01 } } : variants.hidden,
+      visible: variants.visible ? { ...variants.visible, transition: { duration: 0.01 } } : variants.visible,
+      rest: variants.rest ? { ...variants.rest, transition: { duration: 0.01 } } : variants.rest,
+      hover: variants.hover ? { ...variants.hover, transition: { duration: 0.01 } } : variants.hover,
+      tap: variants.tap ? { ...variants.tap, transition: { duration: 0.01 } } : variants.tap,
+      initial: variants.initial ? { ...variants.initial, transition: { duration: 0.01 } } : variants.initial,
+      animate: variants.animate ? { ...variants.animate, transition: { duration: 0.01 } } : variants.animate,
+      exit: variants.exit ? { ...variants.exit, transition: { duration: 0.01 } } : variants.exit,
+    } as T;
   }
   return variants;
 };

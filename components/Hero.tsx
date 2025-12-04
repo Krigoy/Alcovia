@@ -228,12 +228,12 @@ export function Hero() {
           <div className="absolute inset-0 -mx-8 -my-4 bg-background/5 backdrop-blur-[8px] sm:backdrop-blur-[10px]" />
           <div className="relative px-8 py-4 sm:px-12 sm:py-6">
             <motion.h1
-              className="font-display font-bold text-white tracking-[-0.02em]"
+              className="font-display text-white"
               style={{
-                fontSize: "clamp(2.5rem, 8vw + 1rem, 6.5rem)",
-                lineHeight: "1.08",
-                letterSpacing: "-0.02em",
-                fontWeight: 700,
+                fontSize: "clamp(2.75rem, 7.5vw + 1rem, 6rem)",
+                lineHeight: "1.15",
+                letterSpacing: "-0.03em",
+                fontWeight: 600,
               }}
               variants={{
                 hidden: { opacity: 0 },
@@ -245,7 +245,7 @@ export function Hero() {
             >
               {/* First line: "Dare to become" - impactful */}
               <motion.div
-                className="mb-2 sm:mb-3"
+                className="mb-3 sm:mb-4"
                 variants={{
                   hidden: { opacity: 0, y: 20 },
                   visible: {
@@ -261,7 +261,8 @@ export function Hero() {
                     className="inline-block text-white"
                     style={{
                       textShadow: "0 2px 8px rgba(0,0,0,0.6)",
-                      fontWeight: 700,
+                      fontWeight: 600,
+                      letterSpacing: "-0.03em",
                     }}
                     variants={getMotionVariants(wordReveal, reduceMotion)}
                     custom={i}
@@ -288,8 +289,8 @@ export function Hero() {
                     key={`line2-${i}`}
                     className="inline-block text-accent"
                     style={{
-                      letterSpacing: "-0.01em",
-                      fontWeight: 700,
+                      letterSpacing: "-0.02em",
+                      fontWeight: 600,
                       textShadow: "0 2px 6px rgba(255,75,92,0.4)",
                     }}
                     variants={getMotionVariants(wordReveal, reduceMotion)}
@@ -306,10 +307,12 @@ export function Hero() {
 
         {/* Description text with enhanced styling */}
         <motion.p
-          className="max-w-2xl text-body font-sans text-white/95 mt-6 sm:mt-8 px-4 sm:px-6 leading-relaxed relative z-10"
+          className="max-w-2xl font-sans text-white/90 mt-8 sm:mt-10 px-4 sm:px-6 relative z-10"
           style={{
-            fontSize: "clamp(1rem, 1.5vw + 0.5rem, 1.25rem)",
-            lineHeight: 1.75,
+            fontSize: "clamp(1.0625rem, 1.25vw + 0.5rem, 1.1875rem)",
+            lineHeight: 1.7,
+            letterSpacing: "0.01em",
+            fontWeight: 400,
             textShadow: "0 1px 4px rgba(0,0,0,0.5)",
           }}
           initial={{ opacity: 0, y: 40, filter: "blur(12px)" }}
@@ -375,7 +378,7 @@ export function Hero() {
               style={{
                 textShadow: "0 1px 3px rgba(0,0,0,0.5)",
               }}
-              aria-label="Learn more about Alcovia"
+            aria-label="Learn more about Alcovia"
           >
             Learn more
             </Button>

@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { LoginBackground } from "@/components/ui/LoginBackground";
@@ -12,21 +10,12 @@ const ClerkSignIn = dynamic(() => import("@clerk/nextjs").then((mod) => ({ defau
   ssr: false,
 });
 
-export default function LoginPage() {
-  const router = useRouter();
-  const { user, isLoaded } = useUser();
+function LoginPageContent() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  // Redirect to home if already signed in
-  useEffect(() => {
-    if (isLoaded && user) {
-      router.replace("/?showEnrollForm=true");
-    }
-  }, [isLoaded, user, router]);
 
   // Return a placeholder during SSR to prevent hydration mismatch
   if (!mounted) {
@@ -108,46 +97,49 @@ export default function LoginPage() {
         </motion.div>
 
         {/* Login Dialog - Centered */}
-        {mounted && isLoaded && !user && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-            className="flex justify-center w-full"
-          >
-            <div className="w-full max-w-md px-4 sm:px-0">
-              <ClerkSignIn
-                appearance={{
-                  elements: {
-                    rootBox: "mx-auto w-full",
-                    card: "bg-surface/95 border border-white/12 shadow-[0_30px_80px_rgba(0,0,0,0.9)] rounded-2xl backdrop-blur-xl w-full",
-                    headerTitle: "font-display font-bold text-foreground text-2xl sm:text-3xl",
-                    headerSubtitle: "font-sans text-foreground/60 text-sm sm:text-base",
-                    socialButtonsBlockButton:
-                      "bg-background/40 border border-white/14 text-foreground hover:bg-background/60 font-sans text-sm sm:text-base px-4 py-3 sm:px-6 sm:py-3.5",
-                    formButtonPrimary:
-                      "bg-accent hover:bg-accent-soft text-background font-sans font-semibold text-sm sm:text-base px-4 py-3 sm:px-6 sm:py-3.5",
-                    formFieldInput:
-                      "bg-background/40 border-white/14 text-foreground font-sans text-sm sm:text-base px-4 py-3",
-                    formFieldLabel: "font-sans text-foreground/80 text-xs sm:text-sm",
-                    footerActionLink: "text-accent hover:text-accent-soft text-sm sm:text-base",
-                    identityPreviewText: "font-sans text-foreground text-sm sm:text-base",
-                    identityPreviewEditButton: "text-accent hover:text-accent-soft text-sm sm:text-base",
-                    formButtonReset: "text-sm sm:text-base",
-                    formResendCodeLink: "text-sm sm:text-base",
-                    otpCodeFieldInput: "text-sm sm:text-base",
-                  },
-                }}
-                routing="path"
-                path="/login"
-                signUpUrl="/sign-up"
-                afterSignInUrl="/?showEnrollForm=true"
-                afterSignUpUrl="/?showEnrollForm=true"
-              />
-            </div>
-          </motion.div>
-        )}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+          className="flex justify-center w-full"
+        >
+          <div className="w-full max-w-md px-4 sm:px-0">
+            <ClerkSignIn
+              appearance={{
+                elements: {
+                  rootBox: "mx-auto w-full",
+                  card: "bg-surface/95 border border-white/12 shadow-[0_30px_80px_rgba(0,0,0,0.9)] rounded-2xl backdrop-blur-xl w-full",
+                  headerTitle: "font-display font-bold text-foreground text-2xl sm:text-3xl",
+                  headerSubtitle: "font-sans text-foreground/60 text-sm sm:text-base",
+                  socialButtonsBlockButton:
+                    "bg-background/40 border border-white/14 text-foreground hover:bg-background/60 font-sans text-sm sm:text-base px-4 py-3 sm:px-6 sm:py-3.5",
+                  formButtonPrimary:
+                    "bg-accent hover:bg-accent-soft text-background font-sans font-semibold text-sm sm:text-base px-4 py-3 sm:px-6 sm:py-3.5",
+                  formFieldInput:
+                    "bg-background/40 border-white/14 text-foreground font-sans text-sm sm:text-base px-4 py-3",
+                  formFieldLabel: "font-sans text-foreground/80 text-xs sm:text-sm",
+                  footerActionLink: "text-accent hover:text-accent-soft text-sm sm:text-base",
+                  identityPreviewText: "font-sans text-foreground text-sm sm:text-base",
+                  identityPreviewEditButton: "text-accent hover:text-accent-soft text-sm sm:text-base",
+                  formButtonReset: "text-sm sm:text-base",
+                  formResendCodeLink: "text-sm sm:text-base",
+                  otpCodeFieldInput: "text-sm sm:text-base",
+                },
+              }}
+              routing="path"
+              path="/login"
+              signUpUrl="/sign-up"
+              afterSignInUrl="/?showEnrollForm=true"
+              afterSignUpUrl="/?showEnrollForm=true"
+            />
+          </div>
+        </motion.div>
       </div>
     </div>
   );
 }
+
+// Export default with dynamic to prevent SSR issues
+export default dynamic(() => Promise.resolve(LoginPageContent), {
+  ssr: false,
+});

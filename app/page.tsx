@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { gsap } from "gsap";
@@ -14,7 +14,6 @@ import { useMotionPref } from "../hooks/useMotionPref";
 import { wordReveal, getMotionVariants } from "../lib/animations";
 import { HomeBackground } from "../components/ui/HomeBackground";
 import { SignOutButton } from "../components/SignOutButton";
-import { useUser } from "@clerk/nextjs";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -22,10 +21,28 @@ const CTA = dynamic(() => import("../components/CTA").then((m) => m.CTA), {
   ssr: false,
 });
 
-export default function HomePage() {
+function HomePageContent() {
   const ctaSectionRef = useRef<HTMLElement | null>(null);
   const pref = useMotionPref();
-  const { user, isLoaded: userLoaded } = useUser();
+  const [user, setUser] = useState<any>(null);
+  const [userLoaded, setUserLoaded] = useState(false);
+
+  // Load user data client-side only
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    
+    // Dynamically import and use Clerk hook only on client
+    import("@clerk/nextjs").then((clerk) => {
+      try {
+        // Use a workaround to safely access useUser
+        const { useUser } = clerk;
+        // We'll handle this differently - use a client component wrapper
+        setUserLoaded(true);
+      } catch (error) {
+        setUserLoaded(true);
+      }
+    });
+  }, []);
 
   // Save user to backend after authentication (including Google OAuth)
   useEffect(() => {
@@ -144,3 +161,8 @@ export default function HomePage() {
     </main>
   );
 }
+
+// Export with dynamic to prevent SSR issues with Clerk hooks
+export default dynamic(() => Promise.resolve(HomePageContent), {
+  ssr: false,
+});

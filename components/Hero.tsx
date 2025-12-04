@@ -22,7 +22,10 @@ export function Hero() {
   // Detect mobile on mount and handle resize
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(typeof window !== "undefined" && (window.innerWidth < 768 || isTouchDevice()));
+      setIsMobile(
+        typeof window !== "undefined" &&
+          (window.innerWidth < 768 || isTouchDevice())
+      );
     };
     checkMobile();
     window.addEventListener("resize", checkMobile);

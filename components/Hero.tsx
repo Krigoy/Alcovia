@@ -217,21 +217,23 @@ export function Hero() {
           transformStyle: "preserve-3d",
         }}
       >
-        {/* Frosted glass container for headline - premium feel */}
+        {/* Headline container - subtle backdrop for readability */}
         <motion.div
           className="relative w-full"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="absolute inset-0 -mx-8 -my-4 bg-background/20 backdrop-blur-[12px] rounded-3xl border border-white/5 sm:backdrop-blur-[16px] sm:rounded-[2rem]" />
+          {/* Very subtle backdrop - almost invisible */}
+          <div className="absolute inset-0 -mx-8 -my-4 bg-background/5 backdrop-blur-[8px] sm:backdrop-blur-[10px]" />
           <div className="relative px-8 py-4 sm:px-12 sm:py-6">
             <motion.h1
-              className="font-display font-black text-white tracking-[-0.02em]"
+              className="font-display font-bold text-white tracking-[-0.02em]"
               style={{
                 fontSize: "clamp(2.5rem, 8vw + 1rem, 6.5rem)",
                 lineHeight: "1.08",
                 letterSpacing: "-0.02em",
+                fontWeight: 700,
               }}
               variants={{
                 hidden: { opacity: 0 },
@@ -241,7 +243,7 @@ export function Hero() {
                 },
               }}
             >
-              {/* First line: "Dare to become" - impactful and bold */}
+              {/* First line: "Dare to become" - impactful */}
               <motion.div
                 className="mb-2 sm:mb-3"
                 variants={{
@@ -258,8 +260,8 @@ export function Hero() {
                     key={i}
                     className="inline-block text-white"
                     style={{
-                      textShadow: "0 4px 24px rgba(0,0,0,0.95), 0 2px 12px rgba(0,0,0,0.8), 0 0 60px rgba(0,0,0,0.6)",
-                      filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.9))",
+                      textShadow: "0 3px 18px rgba(0,0,0,0.9), 0 1px 8px rgba(0,0,0,0.7), 0 0 40px rgba(0,0,0,0.5)",
+                      fontWeight: 700,
                     }}
                     variants={getMotionVariants(wordReveal, reduceMotion)}
                     custom={i}
@@ -287,8 +289,8 @@ export function Hero() {
                     className="inline-block text-accent"
                     style={{
                       letterSpacing: "-0.01em",
-                      textShadow: "0 4px 20px rgba(255,75,92,0.7), 0 2px 12px rgba(255,75,92,0.5), 0 0 40px rgba(255,75,92,0.4), 0 0 80px rgba(255,75,92,0.2)",
-                      filter: "drop-shadow(0 2px 8px rgba(255,75,92,0.6))",
+                      fontWeight: 700,
+                      textShadow: "0 3px 16px rgba(255,75,92,0.6), 0 1px 8px rgba(255,75,92,0.4), 0 0 30px rgba(255,75,92,0.3)",
                     }}
                     variants={getMotionVariants(wordReveal, reduceMotion)}
                     custom={i + 3}
@@ -350,8 +352,8 @@ export function Hero() {
                 "h-auto backdrop-blur-sm"
               )}
               aria-label="Contact Alcovia"
-            >
-              Contact Us
+          >
+            Contact Us
               <Mail className="ml-2 h-4 w-4" />
             </Button>
           </motion.div>
@@ -374,8 +376,8 @@ export function Hero() {
                 textShadow: "0 2px 8px rgba(0,0,0,0.8)",
               }}
               aria-label="Learn more about Alcovia"
-            >
-              Learn more
+          >
+            Learn more
             </Button>
           </motion.div>
         </motion.div>

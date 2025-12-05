@@ -101,16 +101,16 @@ function SignOutButtonInner() {
       {showButton && (
         <motion.div
           key="signout-button"
-          initial={hasAnimated ? false : { opacity: 0, y: 30, scale: 0.8 }}
+          initial={hasAnimated ? false : { opacity: 0.3, y: 20, scale: 0.9 }}
           animate={{ 
             opacity: 1, 
-            y: hasAnimated ? 0 : [30, -15, 5, -8, 2, -3, 0],
-            scale: hasAnimated ? 1 : [0.8, 1.1, 0.98, 1.03, 0.99, 1.01, 1],
+            y: hasAnimated ? 0 : [20, -10, 3, -5, 1, -2, 0],
+            scale: hasAnimated ? 1 : [0.9, 1.05, 0.99, 1.02, 0.995, 1.005, 1],
             transition: hasAnimated ? {
               duration: 0.3,
               ease: "easeOut"
             } : {
-              duration: 1.2,
+              duration: 1,
               ease: [0.25, 1.75, 0.5, 1],
               times: [0, 0.2, 0.4, 0.6, 0.75, 0.9, 1],
               onComplete: () => setHasAnimated(true),
@@ -118,14 +118,15 @@ function SignOutButtonInner() {
           }}
           exit={{ 
             opacity: 0, 
-            y: 30, 
-            scale: 0.8,
+            y: 20, 
+            scale: 0.9,
             transition: { duration: 0.3 }
           }}
           className="fixed bottom-6 right-6 z-50 sm:bottom-8 sm:right-8"
           style={{ 
             willChange: hasAnimated ? "auto" : "transform",
             overflow: "visible",
+            pointerEvents: "auto",
           }}
         >
           <Button

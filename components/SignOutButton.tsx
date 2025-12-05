@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useUser, useClerk } from "@clerk/nextjs";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -124,23 +124,21 @@ function SignOutButtonInner() {
         pointerEvents: "auto",
       }}
     >
-          <Button
-            onClick={handleSignOut}
-            className={cn(
-              "group rounded-full bg-accent/90 hover:bg-accent px-3 py-2 sm:px-4 sm:py-2.5",
-              "text-xs font-sans font-semibold uppercase tracking-[0.1em] text-background",
-              "shadow-[0_8px_32px_rgba(255,75,92,0.4)] hover:shadow-[0_12px_40px_rgba(255,75,92,0.6)]",
-              "transition-all duration-300 backdrop-blur-sm",
-              "flex items-center gap-1.5 sm:gap-2",
-              "min-h-[36px] touch-manipulation"
-            )}
-          >
-            <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4 group-hover:translate-x-1 transition-transform" />
-            <span className="text-[10px] sm:text-xs">Logout</span>
-          </Button>
-        </motion.div>
-      )}
-    </AnimatePresence>
+      <Button
+        onClick={handleSignOut}
+        className={cn(
+          "group rounded-full bg-accent/90 hover:bg-accent px-3 py-2 sm:px-4 sm:py-2.5",
+          "text-xs font-sans font-semibold uppercase tracking-[0.1em] text-background",
+          "shadow-[0_8px_32px_rgba(255,75,92,0.4)] hover:shadow-[0_12px_40px_rgba(255,75,92,0.6)]",
+          "transition-all duration-300 backdrop-blur-sm",
+          "flex items-center gap-1.5 sm:gap-2",
+          "min-h-[36px] touch-manipulation"
+        )}
+      >
+        <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4 group-hover:translate-x-1 transition-transform" />
+        <span className="text-[10px] sm:text-xs">Logout</span>
+      </Button>
+    </motion.div>
   );
 }
 

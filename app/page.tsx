@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { gsap } from "gsap";
@@ -24,50 +24,6 @@ const CTA = dynamic(() => import("../components/CTA").then((m) => m.CTA), {
 function HomePageContent() {
   const ctaSectionRef = useRef<HTMLElement | null>(null);
   const pref = useMotionPref();
-  const [user, setUser] = useState<any>(null);
-  const [userLoaded, setUserLoaded] = useState(false);
-
-  // Load user data client-side only
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    
-    // Dynamically import and use Clerk hook only on client
-    import("@clerk/nextjs").then((clerk) => {
-      try {
-        // Use a workaround to safely access useUser
-        const { useUser } = clerk;
-        // We'll handle this differently - use a client component wrapper
-        setUserLoaded(true);
-      } catch (error) {
-        setUserLoaded(true);
-      }
-    });
-  }, []);
-
-  // Save user to backend after authentication (including Google OAuth)
-  useEffect(() => {
-    if (!userLoaded || !user) return;
-
-    const saveUserToBackend = async () => {
-      try {
-        await fetch("/api/users", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            clerkId: user.id,
-            email: user.primaryEmailAddress?.emailAddress || user.emailAddresses[0]?.emailAddress,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            createdAt: new Date().toISOString(),
-          }),
-        });
-      } catch (error) {
-        console.error("Failed to save user to backend:", error);
-      }
-    };
-
-    saveUserToBackend();
-  }, [user, userLoaded]);
 
   useEffect(() => {
     if (!ctaSectionRef.current || pref === "reduce") return;

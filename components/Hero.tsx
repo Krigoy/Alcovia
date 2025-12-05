@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useMagnetic } from "../hooks/useMagnetic";
-import { ArrowRight, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 
 export function Hero() {
   const sectionRef = useRef<HTMLElement | null>(null);

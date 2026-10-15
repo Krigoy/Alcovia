@@ -13,8 +13,6 @@ const clerkMiddleware = authMiddleware({
     '/sign-up(.*)',
     '/api/webhooks(.*)',
     '/api/signup(.*)',
-    '/api/enrollments(.*)',
-    '/api/users(.*)',
   ],
 });
 

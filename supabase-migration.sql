@@ -17,11 +17,10 @@ CREATE INDEX IF NOT EXISTS idx_enrollments_created_at ON enrollments(created_at 
 -- Enable Row Level Security (RLS)
 ALTER TABLE enrollments ENABLE ROW LEVEL SECURITY;
 
--- Create policy to allow anyone to insert (for form submissions)
-CREATE POLICY "Allow public insert" ON enrollments
-  FOR INSERT
-  TO public
-  WITH CHECK (true);
+-- No public policies: the /api/signup route writes with the service-role key,
+-- which bypasses RLS. Leaving RLS on with no policies stops anyone using the
+-- public anon key from inserting rows directly and skipping validation.
+DROP POLICY IF EXISTS "Allow public insert" ON enrollments;
 
 -- Create policy to allow authenticated users to read (optional - adjust as needed)
 -- For now, we'll allow public read access via service role key in API routes
@@ -32,6 +31,7 @@ CREATE POLICY "Allow public insert" ON enrollments
 --   USING (true);
 
 -- Optional: Add email validation constraint
+ALTER TABLE enrollments DROP CONSTRAINT IF EXISTS email_format_check;
 ALTER TABLE enrollments
   ADD CONSTRAINT email_format_check 
   CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$');

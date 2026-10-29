@@ -41,7 +41,7 @@ export default function SignUpPage() {
             Please add your Clerk API keys to .env.local to enable authentication.
           </p>
           <p className="font-sans text-sm text-foreground/40">
-            See CLERK_SETUP.md for instructions.
+            See docs/CLERK_SETUP.md for instructions.
           </p>
         </div>
       </div>

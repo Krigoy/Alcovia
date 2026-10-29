@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { LoginBackground } from "@/components/ui/LoginBackground";
@@ -13,12 +14,15 @@ const ClerkSignIn = dynamic(() => import("@clerk/nextjs").then((mod) => ({ defau
 function LoginPageContent() {
   const [mounted, setMounted] = useState(false);
   const [clerkKey, setClerkKey] = useState<string | undefined>(undefined);
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
-    // Check if Clerk key is available
-    setClerkKey(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
-  }, []);
+    const key = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+    setClerkKey(key);
+    // Without Clerk there is nothing to sign in to, so go straight to the enrollment form.
+    if (!key) router.replace("/?showEnrollForm=true");
+  }, [router]);
 
   // Return a placeholder during SSR to prevent hydration mismatch
   if (!mounted) {
@@ -145,7 +149,7 @@ function LoginPageContent() {
             className="text-center"
           >
             <p className="text-foreground/60 font-sans">
-              Authentication is not configured. Please add Clerk environment variables.
+              Opening the enrollment form...
             </p>
           </motion.div>
         ) : null}

@@ -130,7 +130,8 @@ export function CTA() {
     }
     
     // Final regex check
-    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+    // Same character set as the database's email_format_check constraint.
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
     if (!emailRegex.test(trimmedEmail)) {
       setSubmitStatus("error");
       setErrorMessage("Please enter a valid email address");
@@ -184,7 +185,11 @@ export function CTA() {
         <Button
           type="button"
           onClick={() => {
-            // Always redirect to login page - it will handle showing the form if Clerk isn't configured
+            // Without Clerk configured there is no sign-in step, so open the form directly.
+            if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
+              setOpen(true);
+              return;
+            }
             router.push("/login");
           }}
           className={cn(
@@ -229,7 +234,7 @@ export function CTA() {
                   exit={{ opacity: 0, y: -10 }}
                   className="rounded-lg bg-green-500/20 border border-green-500/40 px-4 py-3 text-body font-sans text-green-400"
                 >
-                  ✓ Enrollment submitted successfully! We'll be in touch soon.
+                  ✓ Enrollment submitted successfully! We&apos;ll be in touch soon.
                 </motion.div>
               )}
             </AnimatePresence>
@@ -323,7 +328,7 @@ export function CTA() {
 
             <div className="flex items-center justify-between gap-rhythm-2 pt-rhythm-1">
               <p className="text-label font-sans text-foreground/50">
-                Your information will be securely stored and we'll contact you soon.
+                Your information will be securely stored and we&apos;ll contact you soon.
               </p>
               <motion.div ref={submitButtonRef}>
                 <Button

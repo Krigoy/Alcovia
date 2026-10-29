@@ -1,23 +1,38 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useMotionPref } from "../hooks/useMotionPref";
-import { shouldReduceMotion } from "../lib/animations";
+
+type Particle = {
+  id: number;
+  size: number;
+  x: number;
+  y: number;
+  duration: number;
+  delay: number;
+};
 
 export function FloatingParticles() {
   const pref = useMotionPref();
-  const reduceMotion = pref === "reduce" || shouldReduceMotion();
+  const reduceMotion = pref === "reduce";
+  // Random positions are generated after mount so the server and client markup match.
+  const [particles, setParticles] = useState<Particle[]>([]);
 
-  if (reduceMotion) return null;
+  useEffect(() => {
+    setParticles(
+      Array.from({ length: 12 }, (_, i) => ({
+        id: i,
+        size: Math.random() * 4 + 2,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        duration: Math.random() * 4 + 4,
+        delay: Math.random() * 2,
+      }))
+    );
+  }, []);
 
-  const particles = Array.from({ length: 12 }, (_, i) => ({
-    id: i,
-    size: Math.random() * 4 + 2,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    duration: Math.random() * 4 + 4,
-    delay: Math.random() * 2,
-  }));
+  if (reduceMotion || particles.length === 0) return null;
 
   return (
     <div className="pointer-events-none fixed inset-0 overflow-hidden -z-10" aria-hidden="true">

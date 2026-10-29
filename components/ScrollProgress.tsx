@@ -2,12 +2,11 @@
 
 import { useScroll, useSpring, motion } from "framer-motion";
 import { useMotionPref } from "../hooks/useMotionPref";
-import { shouldReduceMotion } from "../lib/animations";
 
 export function ScrollProgress() {
   const { scrollYProgress } = useScroll();
   const pref = useMotionPref();
-  const reduceMotion = pref === "reduce" || shouldReduceMotion();
+  const reduceMotion = pref === "reduce";
 
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,

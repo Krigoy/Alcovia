@@ -1,5 +1,8 @@
 import { getSupabaseAdmin, validateSupabaseConfig } from "./supabase";
 
+// Thrown when the database rejects an enrollment because the input is invalid.
+export class EnrollmentValidationError extends Error {}
+
 // Type for enrollment data
 export interface Enrollment {
   id: number;
@@ -31,6 +34,10 @@ export async function insertEnrollment(data: {
     .single();
 
   if (error) {
+    // 23514 = check constraint violation (e.g. email_format_check): the input was invalid.
+    if (error.code === "23514") {
+      throw new EnrollmentValidationError("Please enter a valid email address");
+    }
     throw new Error(`Failed to insert enrollment: ${error.message}`);
   }
 

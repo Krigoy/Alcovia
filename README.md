@@ -54,7 +54,7 @@ supabase-migration.sql       Table, indexes and row-level-security policy
 
 ### Prerequisites
 
-- Node.js 18+ and pnpm
+- Node.js 20+ and pnpm (on Vercel, set the Node.js version to 20.x or newer; `@supabase/supabase-js` requires it)
 - A [Supabase](https://supabase.com) project and a [Clerk](https://clerk.com) application
 
 ### Setup

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { insertEnrollment } from "../../../lib/db-supabase";
+import { insertEnrollment, EnrollmentValidationError } from "../../../lib/db-supabase";
 
 export async function POST(request: Request) {
   try {
@@ -119,7 +119,8 @@ export async function POST(request: Request) {
     }
     
     // Final regex validation for overall format
-    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+    // Same character set as the database's email_format_check constraint.
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
     
     if (!emailRegex.test(trimmedEmail)) {
       return NextResponse.json(
@@ -130,9 +131,12 @@ export async function POST(request: Request) {
 
     // Sanitize inputs (email already trimmed and lowercased above)
     const sanitizedData = {
-      name: name.trim(),
+      name: name.trim().slice(0, 200),
       email: trimmedEmail,
-      context: context ? context.trim() : null,
+      context:
+        typeof context === "string" && context.trim()
+          ? context.trim().slice(0, 5000)
+          : null,
     };
 
     // Save to database
@@ -152,6 +156,10 @@ export async function POST(request: Request) {
       id: enrollment.id,
     });
   } catch (error) {
+    if (error instanceof EnrollmentValidationError) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
+
     // eslint-disable-next-line no-console
     console.error("[/api/signup] Error:", error);
 

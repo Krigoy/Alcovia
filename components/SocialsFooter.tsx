@@ -52,7 +52,7 @@ export function SocialsFooter() {
         {/* Section Title */}
         <div className="mb-rhythm-6 text-center">
           <h2 className="font-display text-section-heading font-black tracking-[-0.015em] text-foreground">
-            What's Up on Socials
+            What&apos;s Up on Socials
           </h2>
         </div>
 

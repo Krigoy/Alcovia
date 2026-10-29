@@ -8,7 +8,7 @@ const isClerkConfigured = !!process.env.CLERK_SECRET_KEY && !!process.env.NEXT_P
 const clerkMiddleware = authMiddleware({
   publicRoutes: [
     '/',
-    '/login',
+    '/login(.*)',
     '/sign-in(.*)',
     '/sign-up(.*)',
     '/api/webhooks(.*)',

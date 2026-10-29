@@ -341,17 +341,26 @@ export const getMotionVariants = <T extends Variants>(
   reduceMotion: boolean
 ): T => {
   if (reduceMotion) {
-    // Return variants with minimal motion - override transitions only
+    // Override only the transition. Some variants (e.g. wordReveal.visible) are
+    // functions of the element index, so they must stay functions; spreading a
+    // function would drop its target values and leave the element hidden.
+    const instant = { duration: 0.01 };
+    const wrap = (v: any) =>
+      typeof v === "function"
+        ? (...args: any[]) => ({ ...v(...args), transition: instant })
+        : v
+          ? { ...v, transition: instant }
+          : v;
     return {
       ...variants,
-      hidden: variants.hidden ? { ...variants.hidden, transition: { duration: 0.01 } } : variants.hidden,
-      visible: variants.visible ? { ...variants.visible, transition: { duration: 0.01 } } : variants.visible,
-      rest: variants.rest ? { ...variants.rest, transition: { duration: 0.01 } } : variants.rest,
-      hover: variants.hover ? { ...variants.hover, transition: { duration: 0.01 } } : variants.hover,
-      tap: variants.tap ? { ...variants.tap, transition: { duration: 0.01 } } : variants.tap,
-      initial: variants.initial ? { ...variants.initial, transition: { duration: 0.01 } } : variants.initial,
-      animate: variants.animate ? { ...variants.animate, transition: { duration: 0.01 } } : variants.animate,
-      exit: variants.exit ? { ...variants.exit, transition: { duration: 0.01 } } : variants.exit,
+      hidden: wrap(variants.hidden),
+      visible: wrap(variants.visible),
+      rest: wrap(variants.rest),
+      hover: wrap(variants.hover),
+      tap: wrap(variants.tap),
+      initial: wrap(variants.initial),
+      animate: wrap(variants.animate),
+      exit: wrap(variants.exit),
     } as T;
   }
   return variants;
